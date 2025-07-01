@@ -1,4 +1,3 @@
-package bj2744;
 import java.io.*;
 
 public class bj2744 {
