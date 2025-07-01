@@ -2,7 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Main {
+public class bj13223 {
     private static String secToTime(int totalsecond){
         int hour = totalsecond / 3600;
         int min = (totalsecond % 3600) / 60;
