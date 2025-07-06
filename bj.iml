@@ -16,6 +16,8 @@
       <sourceFolder url="file://$MODULE_DIR$/bj3273sumoftwo" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/bj1018chessrecolor" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/bj4673selfnum" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bj1120string" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bj1730panhwa" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
