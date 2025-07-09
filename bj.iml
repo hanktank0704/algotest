@@ -20,6 +20,7 @@
       <sourceFolder url="file://$MODULE_DIR$/bj1730panhwa" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/bj1181wordsort" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/bj18310antenna" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/sort" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
