@@ -24,6 +24,7 @@
       <sourceFolder url="file://$MODULE_DIR$/week1" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/prefixSum" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/binarySearch" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/queue" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
