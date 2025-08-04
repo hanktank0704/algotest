@@ -28,6 +28,7 @@
       <sourceFolder url="file://$MODULE_DIR$/twopointer" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/recursion" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/dfs_bfs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/samsung" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
