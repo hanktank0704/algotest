@@ -11,8 +11,8 @@ public class f2583areafind {
         n = Integer.parseInt(st.nextToken());
         k = Integer.parseInt(st.nextToken());
 
-        arr = new int[m][n];
-        visited = new int[m][n];
+        arr = new int[n][m];
+        visited = new int[n][m];
 
         for (int i = 0; i < k; i++) {
             int x1, y1, x2, y2;
@@ -22,25 +22,22 @@ public class f2583areafind {
             x2 = Integer.parseInt(st.nextToken());
             y2 = Integer.parseInt(st.nextToken());
 
-            for (int j = 0; j < m; j++) {
-                for (int l = 0; l < n; l++) {
-                    arr[j][l] = 1;
+            for (int j = x1; j < x2; j++) {
+                for (int l = y2; l < y2; l++) {
+                    arr[l][j] = 1;
                 }
             }
-            for (int j = x1; j < x2; j++) {
-                for (int l = y1; l < y2; l++) {
-                    arr[j][l] = 0;
-                }
+        }
+        printarr();
+
+    }
+    public static void printarr(){
+        System.out.println();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                System.out.print(arr[i][j] + " ");
             }
             System.out.println();
-            for (int j = 0; j < m; j++) {
-                for (int l = 0; l < n; l++) {
-                    System.out.print(arr[i][j] + " ");
-                }
-                System.out.println();
-            }
-
         }
-
     }
 }
