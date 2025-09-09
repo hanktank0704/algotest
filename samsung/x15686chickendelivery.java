@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-public class i15686chickendelivery {
+public class x15686chickendelivery {
     static int ans = Integer.MAX_VALUE;
     static int n,m;
     static int[][] arr;
@@ -15,7 +15,7 @@ public class i15686chickendelivery {
     static int[] usedchicken;
     static ArrayList<int[]> lis;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         //roudnlab, 천주혁kj
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -54,20 +54,34 @@ public class i15686chickendelivery {
 //    static int totalchicken;
 //    static int[] usedchicken;
     public static void backtrack(int stage, int start){
-//        ArrayList<int[]> templist = new ArrayList<>(lis);
         if(stage == totalchicken - m){
+//            System.out.println("deletethis");
+//            for (int val : deletethis) {
+//                System.out.print(val + " ");
+//            }
+//            System.out.println();
             for (int val : deletethis) {
                 int[] cor = lis.get(val);
                 int x = cor[0];
                 int y = cor[1];
 
                 arr[x][y] = 0;
-            }
-            findsum();
-//            int temp =
-//            if(ans > temp)
-//                ans = temp;
 
+            }
+//            System.out.println("arr: ");
+//            for (int i = 0; i < n; i++) {
+//                for (int j = 0; j < n; j++) {
+//                    System.out.print(arr[i][j] + " ");
+//                }
+//                System.out.println();
+//            }
+//            System.out.println("sum: ");
+            int temp = findDisSum();
+//            System.out.println(temp);
+            if(ans > temp)
+                ans = temp;
+
+//            System.out.println();
             for (int val : deletethis) {
                 int[] cor = lis.get(val);
                 int x = cor[0];
@@ -90,38 +104,56 @@ public class i15686chickendelivery {
         }
 
     }
-    public static int findsum(){
-        int dissum=0;
-        // find the remaining chicken
-        ArrayList<int[]> remain = new ArrayList<>(lis);
-        for (int i = deletethis.length-1; i >= 0; i--) {
-            int temp = deletethis[i];
-            remain.remove(temp);
-        }
-//        System.out.println("remaining");
-//        for (int[] val : remain) {
-//            System.out.println(val[0] + " " + val[1]);
-//        }
+    public static int findDisSum(){
+        totalDis = 0;
+//        visited = new int[n][n];
+        q = new LinkedList<>();
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if(arr[i][j] == 1){
-                    int dis=Integer.MAX_VALUE;
-                    for(int[] val : remain){
-                        int temp=0;
-                        temp += Math.abs(val[0] - i);
-                        temp += Math.abs(val[1] - j);
-                        if(dis > temp)
-                            dis = temp;
-                    }
-                    dissum += dis;
+                    visited = new int[n][n];
+                    q = new LinkedList<>();
+                    q.add(new int[] {i,j});
+
+                    visited[i][j] = 1;
+                    int distemp = bfsDis();
+                    totalDis += distemp;
                 }
             }
         }
-//        System.out.println("dissum : " + dissum);
-        if(ans > dissum)
-            ans = dissum;
+        return totalDis;
+    }
+    public static int bfsDis(){
+//        visited = new int[n][n];
+        int dis = 0;
+        while(!q.isEmpty()){
+            int[] cur = q.poll();
+            int curx = cur[0];
+            int cury = cur[1];
+            for (int i = 0; i < 4; i++) {
+                int x = curx + dx[i];
+                int y = cury + dy[i];
 
-        return 0;
+                if(x>=0 && x<n && y>=0 && y<n){
+                    if(visited[x][y] == 0){
+                        q.add(new int[] {x,y});
+                        visited[x][y] = visited[curx][cury] + 1;
+                        if(arr[x][y] == 2){
+//                            System.out.println();
+//                            System.out.println("visited: ");
+//                            for (int a = 0; a < n; a++) {
+//                                for (int j = 0; j < n; j++) {
+//                                    System.out.print(visited[a][j] + " ");
+//                                }
+//                                System.out.println();
+//                            }
+                            return visited[x][y] - 1;
+                        }
+                    }
+                }
+            }
+        }
+        return -1;
     }
 }
