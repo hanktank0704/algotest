@@ -88,7 +88,6 @@ public class i15686chickendelivery {
                 backtrack(stage+1, i+1);
             }
         }
-
     }
     public static int findsum(){
         int dissum=0;
