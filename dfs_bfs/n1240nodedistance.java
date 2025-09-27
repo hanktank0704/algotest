@@ -13,11 +13,9 @@ public class n1240nodedistance {
         nlist = new ArrayList<>();
         visited = new int[n+1];
         q= new LinkedList<>();
-
         for (int i = 0; i < n+1; i++) {
             nlist.add(new ArrayList<>());
         }
-
         int a,b,d;
         for (int i = 0; i < n-1; i++) {
             st = new StringTokenizer(br.readLine());

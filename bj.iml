@@ -31,6 +31,10 @@
       <sourceFolder url="file://$MODULE_DIR$/samsung" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/backtracking" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tree" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bfs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dfs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/programmers" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dp" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
