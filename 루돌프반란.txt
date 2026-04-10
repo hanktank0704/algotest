@@ -1,0 +1,356 @@
+import sys
+from collections import deque
+
+input = sys.stdin.readline
+
+# 산타 클래스
+"""
+산타 좌표, 산타 기절여부, 산타 기절 시간, 산타 이동방향, 산타 점수, 산타가 밖에 있는지 여부
+"""
+
+class Santa:
+    def __init__(self, id, r, c, faint, dir, outside, score):
+        self.id = id
+        self.r = r
+        self.c = c
+        self.faint = faint
+        # self.faint_time = faint_time
+        self.dir = dir
+        self.outside = outside
+        self.score = score
+
+
+def show_map():
+    print("debug map")
+    for i in range(1, n + 1):
+        for j in range(1, n + 1):
+            arr[i][j] = 0
+
+    for san in santas:
+        if san.outside == True:
+            continue
+        arr[san.r][san.c] = san.id
+    arr[rudolf_r][rudolf_c] = 44
+
+    for i in range(1, n + 1):
+        for j in range(1, n + 1):
+            print(arr[i][j], end="\t")
+        print()
+    print()
+
+
+def show_arr(arr):
+    print("vis arr")
+    for i in range(1, n + 1):
+        for j in range(1, n + 1):
+            print(arr[i][j], end=" ")
+        print()
+    print()
+
+
+def show_santa_rudolf():
+    # print("santa rudolf")
+    print("rudolf", rudolf_r, rudolf_c, "dir", rudolf_dx, rudolf_dy)
+    for i in santas:
+        print("id", i.id, "r, c:", i.r, i.c, "\tdir:", i.dir, "\tfaint:", i.faint, "\toutside:", i.outside)
+
+
+n, m, p, c, d = map(int, input().split())
+rudolf_r, rudolf_c = map(int, input().split())
+rudolf_dx, rudolf_dy = -1, -1
+
+arr = [[0 for _ in range(n + 1)] for _ in range(n + 1)]
+santas = []
+
+for i in range(p):
+    p, sr, sc = map(int, input().split())
+    santas.append(Santa(p, sr, sc, -11, 0, False, 0))
+
+show_santa_rudolf()
+show_map()
+
+
+def rudolf_bfs(sr, sc):
+    target_r, target_c = -1, -1
+    dx = [-1, -1, -1, 0, 1, 1, 1, 0]
+    dy = [-1, 0, 1, 1, 1, 0, -1, -1]
+
+    vis = [[0 for _ in range(n + 1)] for _ in range(n + 1)]
+
+    # q = deque()
+    # q.append((sr, sc))
+    # vis[sr][sc] = 1
+    #
+    # while q:
+    #     cr, cc = q.popleft()
+    #
+    #     for i in range(8):
+    #         nr = cr + dx[i]
+    #         nc = cc + dy[i]
+    #
+    #         if nr < 1 or nr > n or nc < 1 or nc > n:
+    #             continue
+    #         if vis[nr][nc] != 0:
+    #             continue
+    #
+    #         vis[nr][nc] = vis[cr][cc] + 1
+    #         q.append((nr, nc))
+
+    # show_arr(vis)
+
+    # vis 를 구했으니 이제부터 , 가장 가까운 산타, 그중에서 r,c값이 큰걸 찾으면 된다.
+
+    mn_dis = 21e8
+    for san in santas:
+        # 게임을 탈락한 산타는 넘겨야함
+        if san.outside == True:
+            continue
+
+        san_r, san_c = san.r, san.c
+        dis = (san_r - sr) * (san_r - sr) + (san_c - sc) * (san_c - sc)
+
+        if mn_dis > dis:
+            mn_dis = dis
+            target_r = san_r
+            target_c = san_c
+        if mn_dis == dis:
+            if target_r < san_r:
+                target_r = san_r
+                target_c = san_c
+            elif target_r == san_r and target_c < san_c:
+                target_r = san_r
+                target_c = san_c
+
+    print("target santa", target_r, target_c)
+    return target_r, target_c
+
+
+def move_rudolf(target_r, target_c):
+    global rudolf_r, rudolf_c
+    global rudolf_dx, rudolf_dy
+    dx = [-1, -1, -1, 0, 1, 1, 1, 0]
+    dy = [-1, 0, 1, 1, 1, 0, -1, -1]
+
+    # 모든 방향으로 가보고 거리를 계산한다. 그중에서 가장 작아지는 곳이 루돌프가 이동하는 곳이다.
+    cr, cc = rudolf_r, rudolf_c
+    mn_dis = 21e8
+    next_r, next_c = -1, -1
+
+    for i in range(8):
+        nr = cr + dx[i]
+        nc = cc + dy[i]
+
+        if nr < 1 or nr > n or nc < 1 or nc > n:
+            continue
+
+        dis = (target_r - nr) * (target_r - nr) + (target_c - nc) * (target_c - nc)
+        if mn_dis > dis:
+            mn_dis = dis
+            next_r, next_c = nr, nc
+            rudolf_dx = dx[i]
+            rudolf_dy = dy[i]
+
+    # 루돌프 이동한다.
+    rudolf_r = next_r
+    rudolf_c = next_c
+
+
+def move_santa(san, time):
+    # 1번에서 부터 하나씩
+    # 기절 탈락이면 안된다.
+    # 루돌프에 가까워져야하고 , 산타있는 칸이나 밖으로 못감
+    # 움직일수있는 칸이 없으면 안움직임, 만약 루돌프랑 가까워지지못하면 안움직임
+    # 상우하좌
+    dx = [-1, 0, 1, 0]
+    dy = [0, 1, 0, -1]
+    cr, cc = san.r, san.c
+
+    next_r, next_c = cr, cc
+    # 이거리보다 작아져야한다
+    dis = (rudolf_r - cr) * (rudolf_r - cr) + (rudolf_c - cc) * (rudolf_c - cc)
+    print("cr,cc", cr, cc)
+    for i in range(4):
+        nr = cr + dx[i]
+        nc = cc + dy[i]
+
+        if nr < 1 or nr > n or nc < 1 or nc > n:
+            continue
+        # 산타 겹치면 안됨
+        flag = False
+        for temp in santas:
+            if temp.r == nr and temp.c == nc:
+                flag = True
+                break
+        if flag == True:
+            continue
+
+        # 이제 거리 비교해야함
+        temp_dis = (rudolf_r - nr) * (rudolf_r - nr) + (rudolf_c - nc) * (rudolf_c - nc)
+        print("dis, temp_dis", dis, temp_dis, "nr, nc", nr, nc, "rudolf", rudolf_r, rudolf_c)
+        if dis > temp_dis:
+            next_r = nr
+            next_c = nc
+            dis = temp_dis
+
+            # TODO 굉장히 위험한 선택 굳이 중간에서 수정을 함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            san.dir = i
+
+    # 이동할때, 업데이트 그대로 일수도있다.
+    san.r = next_r
+    san.c = next_c
+    # pass
+
+
+def reaction(san, dx, dy):
+    # 상호작용
+    if san.r < 1 or san.r > n or san.c < 1 or san.c > n:
+        san.outside = True
+        return
+
+    for another in santas:
+        if san.id == another.id:
+            continue
+        # 튕긴 산타가 다시 산타랑 겹친경우
+        if san.r == another.r and san.c == another.c:
+            another.r = another.r + dx
+            another.c = another.c + dy
+
+            # TODO 이게 맞나 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            # 연쇄 반응 재귀로 해도 될까
+            reaction(another, dx, dy)
+            pass
+
+
+def collision(who, time):
+    for san in santas:
+        if san.outside == True:
+            continue
+        if rudolf_r == san.r and rudolf_c == san.c:
+            # 충돌 발생인데, 누가 부딪힌건지 확인해야함!!!!!!!!!!!!
+            # 기절하는 건 맞다.
+            san.faint = time
+            if who == "santa":
+                dx = [-1, 0, 1, 0]
+                dy = [0, 1, 0, -1]
+                # 산타가 움직여서 충돌
+                # 산타가 d점 획득, d칸 밀려남, 산타 이동방향 반대방향으로
+                san.score += d
+                san.r = san.r - dx[san.dir] * d
+                san.c = san.c - dy[san.dir] * d
+
+                reaction(san, -1 * dx[san.dir], -1 * dy[san.dir])
+                pass
+            else:
+                # 루돌프가 움직여서 충돌
+                # 산타가 c 점 획득, c 칸 밀려남, 루돌프 이동방향으로 산타가
+                # 벗어날 수도 있고 상호작용 발생가능성
+                san.score += c
+                san.r = san.r + rudolf_dx * c
+                san.c = san.c + rudolf_dy * c
+
+                reaction(san, rudolf_dx, rudolf_dy)
+                pass
+
+            # 상호작용
+            if san.r < 1 or san.r > n or san.c < 1 or san.c > n:
+                san.outside = True
+
+
+def solve():
+    global rudolf_r, rudolf_c
+    # 1. m개의턴 동안 진행
+    for time in range(m):
+        # 루돌프 먼저이동, 그다음 산타
+        # 2. 루돌프 이동
+
+        # bfs를 돌리고 가장 가까운 산타, 그중에서 r,c값이 가장 큰 산타를 찾는다.
+        target_r, target_c = rudolf_bfs(rudolf_r, rudolf_c)
+
+        # 타깃을 찾았으니 이제 가장 가까워 지는 방향을 찾아야한다.
+        # 대각선으로 가는게 있는 것을 고려해야한다
+        move_rudolf(target_r, target_c)
+        print("$$$$$$$$$$$$$$$$$$$$$$$$")
+        print("time:", time)
+        print()
+
+        print("rudolf move")
+        show_map()
+        show_santa_rudolf()
+
+        # 루돌프 충돌!!!
+        collision("rudolf", time)
+
+        print("score")
+        for san in santas:
+            print(san.score, end=" ")
+        print()
+
+        # 3. 산타 움직임
+        for san in santas:
+            # TODO san.faint == time-1 이부분이 굉장히 이상하다 !!!!!!!!!!!!!!!!!!!!!
+            if san.outside == True or san.faint == time or (san.faint + 1) == time:
+                continue
+
+            # 루돌프랑 가까워지는 칸 찾아야함
+            move_santa(san, time)
+
+        # 4. 충돌
+        # 산타 이동 충돌!!!
+
+        # 여기 위치가 이상하다. 움직일떄마다 콜리젼 체크를 해야하나?
+        # 문제 제대로 읽어야할듯
+        # 지금 콜리젼이 제대로 안되는듯?
+        collision("santa", time)
+
+
+        # 7. 게임 종료
+        # 모두 나가면 게임 종료
+        flag = True
+        for san in santas:
+            if san.outside == False:
+                flag = False
+                break
+        if flag == True:
+            break
+
+        # 끝났을떄 살아남은 산타에게 모두 점수를 준다.
+        for san in santas:
+            if san.outside == False:
+                san.score += 1
+
+        print("santa move")
+        show_map()
+        show_santa_rudolf()
+
+        print("score")
+        for san in santas:
+            print(san.score, end=" ")
+        print()
+        print("$$$$$$$$$$$$$$$$$$$$$$$$")
+        input()
+        pass
+
+    # 최종 점수 출력한다
+    for san in santas:
+        print(san.score, end= " ")
+    print()
+
+
+solve()
+
+"""
+5 7 4 2 2
+3 2
+1 1 3
+2 3 5
+3 5 1
+4 4 4
+
+5 7 4 2 2
+2 4
+1 1 3
+2 3 5
+3 5 1
+4 4 4
+"""
+# 지금 불안한 부분, 상호작용부분 연쇄적으로 발생할떄, 기절 시간 체크, 움직일떄 마다 collision 해야하는거 (이건 확실히 문제임
